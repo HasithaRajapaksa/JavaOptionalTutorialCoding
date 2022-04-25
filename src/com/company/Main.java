@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.List;
 import java.util.Optional;
 
 public class Main {
@@ -7,7 +8,19 @@ public class Main {
     /* This code contains Java Optional Type.
     * The Optional type was introduced in Java 8.
     * It provides a clear and explicit way to convey the message that there may not be a value, without using null.
+    * reference - https://www.youtube.com/watch?v=4BUKaazoYyg&t=382s
     *  */
+
+    public static Customer getCustomerByName(String name){
+        List<Customer> customerList = CustomerStream.getAll();
+
+        //filter method uses predicate
+        return customerList
+                .stream()
+                .filter(customer -> customer.getName().equals(name))
+                .findAny()
+                .orElseThrow(()-> new NullPointerException("name is null"));
+    }
 
     public static void main(String[] args) {
 
@@ -43,6 +56,7 @@ public class Main {
         Optional<String> opt = Optional.ofNullable(customer2.getName());
 
         if(opt.isPresent()){
+            //can call a other method inside this (api call)
             System.out.println("read value "+opt.get());
         }
 
@@ -53,6 +67,28 @@ public class Main {
 
         System.out.println(opt.orElse("default value")); // output - Malik
         System.out.println(nameNull.orElse("default value")); // output - default value
+
+         /*
+        orElseThrow()
+        if value is null need to return custom exception or any
+         */
+
+        //System.out.println(nameNull.orElseThrow(()-> new IllegalArgumentException("name is null"))); // output - default value
+
+
+         /*
+        map() and orElseThrow()
+         */
+
+        System.out.println(opt
+                .map(String::toUpperCase)
+                .orElse("default value not upper case"));
+
+          /*
+        Optional use with stream API
+        */
+
+        getCustomerByName("Malix");
 
     }
 }
